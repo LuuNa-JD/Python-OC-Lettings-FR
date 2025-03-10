@@ -6,6 +6,18 @@ from .models import Profile
 # pulvinar eget. Fusc faucibus, urna quis auctor pharetra,
 # massa dolor cursus neque, quis dictum lacus d
 def index(request):
+    """
+    View function for the profiles index page.
+
+    Retrieves all Profile instances and renders the template
+    with the profiles list.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        Response: The rendered 'profiles/index.html' template with the profiles list.
+    """
     profiles_list = Profile.objects.all()
     context = {'profiles_list': profiles_list}
     return render(request, 'profiles/index.html', context)
@@ -17,6 +29,19 @@ def index(request):
 # it. Nam aliquam dignissim congue.
 # Pellentesque habitant morbi tristique senectus et netus et males
 def profile(request, username):
+    """
+    View function for an individual profile page.
+
+    Retrieves the Profile instance associated with the given username and renders the template
+    with the profile.
+
+    Args:
+        request: The HTTP request object.
+        username: The username of the User associated with the Profile.
+
+    Returns:
+        Response: The rendered 'profiles/profile.html' template with the profile.
+    """
     profile = Profile.objects.get(user__username=username)
     context = {'profile': profile}
     return render(request, 'profiles/profile.html', context)
