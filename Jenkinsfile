@@ -81,7 +81,7 @@ pipeline {
 
                     # Arrêter et supprimer le conteneur s'il existe déjà
                     docker compose down || true
-                    docker rm -f django || true
+                    docker rm -f django-lettings || true
 
                     docker compose pull
                     docker compose up -d
