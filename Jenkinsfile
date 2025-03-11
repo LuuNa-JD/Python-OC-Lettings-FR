@@ -25,11 +25,12 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    python -m venv venv
-                    source venv/bin/activate
-                    pip install -r requirements.txt
-                    flake8 .
-                    pytest --cov-report=term
+                    docker run --rm -v $(pwd):/app -w /app python:3.10 bash -c "
+                    python3 -m venv venv &&
+                    source venv/bin/activate &&
+                    pip install -r requirements.txt &&
+                    flake8 . &&
+                    pytest --cov-report=term"
                     '''
                 }
             }
