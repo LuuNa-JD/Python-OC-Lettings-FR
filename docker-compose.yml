@@ -17,7 +17,7 @@ services:
       - "traefik.http.routers.django-lettings.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.django-lettings.entrypoints=websecure"
       - "traefik.http.routers.django-lettings.tls.certresolver=le"
-      - "traefik.http.routers.jenkins.middlewares=authelia@file"
+      - "traefik.http.routers.django-lettings.middlewares=authelia@file"
       - "traefik.http.middlewares.staticfiles.redirectregex.regex=^/static/(.*)"
       - "traefik.http.middlewares.staticfiles.redirectregex.replacement=/staticfiles/$1"
       - "traefik.http.services.django-lettings.loadbalancer.server.port=8000"
