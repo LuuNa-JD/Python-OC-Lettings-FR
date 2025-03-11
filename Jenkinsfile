@@ -31,8 +31,8 @@ pipeline {
                     python3 -m venv venv &&
                     source venv/bin/activate &&
                     pip install -r requirements.txt &&
-                    flake8 . &&
-                    pytest --cov-report=term"
+                    flake8 .  &&
+                    pytest --cov-report=term &&
                     coverage report --fail-under=80
                     "
                     '''
