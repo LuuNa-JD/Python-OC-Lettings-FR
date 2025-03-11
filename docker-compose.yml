@@ -20,6 +20,7 @@ services:
       - "traefik.http.routers.jenkins.middlewares=authelia@file"
       - "traefik.http.middlewares.staticfiles.redirectregex.regex=^/static/(.*)"
       - "traefik.http.middlewares.staticfiles.redirectregex.replacement=/staticfiles/$1"
+      - "traefik.http.services.django.loadbalancer.server.port=8000"
     networks:
       - proxy
 
