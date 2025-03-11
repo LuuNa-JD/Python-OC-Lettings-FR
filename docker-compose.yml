@@ -1,7 +1,7 @@
 services:
   django:
     image: luunajd/django-lettings:TEMP_TAG
-    container_name: django
+    container_name: django-lettings
     command: gunicorn --bind 0.0.0.0:8000 oc_lettings_site.wsgi:application
     volumes:
       - "./oc-lettings-site.sqlite3:/app/oc-lettings-site.sqlite3"
@@ -14,13 +14,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.django.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.django.entrypoints=websecure"
-      - "traefik.http.routers.django.tls.certresolver=le"
+      - "traefik.http.routers.django-lettings.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.django-lettings.entrypoints=websecure"
+      - "traefik.http.routers.django-lettings.tls.certresolver=le"
       - "traefik.http.routers.jenkins.middlewares=authelia@file"
       - "traefik.http.middlewares.staticfiles.redirectregex.regex=^/static/(.*)"
       - "traefik.http.middlewares.staticfiles.redirectregex.replacement=/staticfiles/$1"
-      - "traefik.http.services.django.loadbalancer.server.port=8000"
+      - "traefik.http.services.django-lettings.loadbalancer.server.port=8000"
     networks:
       - proxy
 
