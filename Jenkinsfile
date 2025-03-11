@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "luunajd/django-lettings"
         PROJECT_DIR = "${env.WORKSPACE}"
-        DEPLOY_DIR = "/home/jenkins/prod/django-lettings"
+        DEPLOY_DIR = "/var/lib/jenkins/prod/django-lettings"
     }
 
     stages {
