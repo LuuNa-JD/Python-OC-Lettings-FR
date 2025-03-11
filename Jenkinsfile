@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'agent-ovh' }
 
     environment {
         DOCKER_IMAGE = "luunajd/django-lettings"
@@ -13,6 +13,7 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/LuuNa-JD/Python-OC-Lettings-FR.git'
             }
         }
+
         stage('Set Docker Tag') {
             steps {
                 script {
@@ -21,6 +22,7 @@ pipeline {
                 }
             }
         }
+
         stage('Run Tests & Linting') {
             steps {
                 script {
@@ -35,6 +37,7 @@ pipeline {
                 }
             }
         }
+
         stage('Check Coverage') {
             steps {
                 script {
@@ -45,6 +48,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -52,6 +56,7 @@ pipeline {
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'DOCKER_HUB_CREDENTIALS', url: 'https://index.docker.io/v1/']) {
@@ -59,32 +64,44 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy to Production') {
             when { branch 'master' }
             steps {
-                script {
+                withCredentials([file(credentialsId: 'DJANGO_ENV_FILE', variable: 'SECRET_ENV')]) {
                     sh """
+                    echo "🚀 Déploiement de l'application..."
+
+                    # Vérifie si DEPLOY_DIR existe, sinon le crée
                     mkdir -p ${DEPLOY_DIR}
 
-                    sed -i "s/TEMP_TAG/${DOCKER_TAG}/g" docker-compose.yml
+                    # Vérification que docker-compose.yml contient bien TEMP_TAG avant de modifier
+                    if grep -q "TEMP_TAG" docker-compose.yml; then
+                        sed -i "s/TEMP_TAG/${DOCKER_TAG}/g" docker-compose.yml
+                    fi
+
+                    # Copie le docker-compose.yml mis à jour dans DEPLOY_DIR
                     cp docker-compose.yml ${DEPLOY_DIR}/docker-compose.yml
 
-                    cp /home/jenkins/secrets/django.env ${DEPLOY_DIR}/.env
+                    # Copie le fichier .env sécurisé depuis Jenkins Credentials
+                    cp ${SECRET_ENV} ${DEPLOY_DIR}/.env
 
                     # Déploiement
                     cd ${DEPLOY_DIR}
-                    export DOCKER_TAG=${DOCKER_TAG}  # Assurer que DOCKER_TAG est défini
                     docker compose down
                     docker compose pull
                     docker compose up -d
+
+                    echo "🚀 Déploiement terminé avec succès !"
                     """
                 }
             }
         }
     }
+
     post {
         success {
-            echo "🚀 Pipeline terminé avec succès, application déployée !"
+            echo "✅ Pipeline terminé avec succès, application déployée !"
         }
         failure {
             echo "❌ Pipeline échoué, consultez les logs Jenkins."
