@@ -88,6 +88,7 @@ pipeline {
 
                     # Forcer la collecte des fichiers statiques et vérifier SQLite
                     docker exec django-lettings python manage.py collectstatic --noinput
+                    docker exec django-lettings python manage.py makemigrations
                     docker exec django-lettings python manage.py migrate
 
                     echo "🚀 Déploiement terminé avec succès !"
