@@ -33,18 +33,8 @@ pipeline {
                     pip install -r requirements.txt &&
                     flake8 . &&
                     pytest --cov-report=term"
+                    coverage report --fail-under=80"
                     '''
-                }
-            }
-        }
-
-        stage('Check Coverage') {
-            steps {
-                script {
-                    def status = sh(script: "coverage report --fail-under=80", returnStatus: true)
-                    if (status != 0) {
-                        error("La couverture de test est inférieure à 80%")
-                    }
                 }
             }
         }
