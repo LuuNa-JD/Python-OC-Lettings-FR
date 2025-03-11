@@ -33,7 +33,8 @@ pipeline {
                     pip install -r requirements.txt &&
                     flake8 . &&
                     pytest --cov-report=term"
-                    coverage report --fail-under=80"
+                    coverage report --fail-under=80
+                    "
                     '''
                 }
             }
