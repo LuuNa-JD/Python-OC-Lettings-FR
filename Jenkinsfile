@@ -57,7 +57,6 @@ pipeline {
         }
 
         stage('Deploy to Production') {
-            when { branch 'master' }
             steps {
                 withCredentials([file(credentialsId: 'DJANGO_ENV_FILE', variable: 'SECRET_ENV')]) {
                     sh """
