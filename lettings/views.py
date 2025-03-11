@@ -1,5 +1,9 @@
-from django.shortcuts import render
+import logging
+import sentry_sdk
+from django.shortcuts import render, get_object_or_404
 from .models import Letting
+
+logger = logging.getLogger(__name__)
 
 
 # Aenean leo magna, vestibulum et tincidunt fermentum,
@@ -7,8 +11,12 @@ from .models import Letting
 # tempor et, bibendum id arcu. Vestibulum ante ipsum primis in faucibus
 # orci luctus et ultrices posuere cubilia curae; Cras eget scelerisque
 def index(request):
+    """
+    Vue affichant la liste des locations.
+    """
     lettings_list = Letting.objects.all()
     context = {'lettings_list': lettings_list}
+    logger.info("Liste des locations récupérée avec succès.")
     return render(request, 'lettings/index.html', context)
 
 
@@ -26,9 +34,18 @@ def index(request):
 # Mauris condimentum auctor elementum. Donec quis nisi ligula.
 # Integer vehicula tincidunt enim, ac lacinia augue pulvinar sit amet.
 def letting(request, letting_id):
-    letting = Letting.objects.get(id=letting_id)
-    context = {
-        'title': letting.title,
-        'address': letting.address,
-    }
-    return render(request, 'lettings/letting.html', context)
+    """
+    Vue affichant les détails d'une location spécifique.
+    """
+    try:
+        letting = get_object_or_404(Letting, id=letting_id)
+        context = {
+            'title': letting.title,
+            'address': letting.address,
+        }
+        logger.info(f"Chargement de la location : {letting.title}")
+        return render(request, 'lettings/letting.html', context)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        logger.error(f"Erreur lors de l'affichage du letting {letting_id}: {e}")
+        return render(request, "500.html", status=500)

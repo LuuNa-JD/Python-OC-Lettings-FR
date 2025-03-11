@@ -1,0 +1,20 @@
+[run]
+source =
+    lettings
+    oc_lettings_site
+    profiles
+omit =
+    */migrations/*
+    oc_lettings_site/tests.py
+    profiles/tests.py
+    lettings/tests.py
+    oc_lettings_site/settings.py
+    manage.py
+    oc_lettings_site/wsgi.py
+    oc_lettings_site/asgi.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
+    if self\.debug

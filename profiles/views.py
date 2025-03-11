@@ -1,5 +1,9 @@
-from django.shortcuts import render
+import logging
+import sentry_sdk
+from django.shortcuts import render, get_object_or_404
 from .models import Profile
+
+logger = logging.getLogger(__name__)
 
 
 # Sed placerat quam in pulvinar commodo. Nullam laoreet consectetur ex, sed consequat libero
@@ -7,19 +11,11 @@ from .models import Profile
 # massa dolor cursus neque, quis dictum lacus d
 def index(request):
     """
-    View function for the profiles index page.
-
-    Retrieves all Profile instances and renders the template
-    with the profiles list.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        Response: The rendered 'profiles/index.html' template with the profiles list.
+    Vue affichant la liste des profils.
     """
     profiles_list = Profile.objects.all()
     context = {'profiles_list': profiles_list}
+    logger.info("Liste des profils récupérée avec succès.")
     return render(request, 'profiles/index.html', context)
 
 
@@ -30,18 +26,14 @@ def index(request):
 # Pellentesque habitant morbi tristique senectus et netus et males
 def profile(request, username):
     """
-    View function for an individual profile page.
-
-    Retrieves the Profile instance associated with the given username and renders the template
-    with the profile.
-
-    Args:
-        request: The HTTP request object.
-        username: The username of the User associated with the Profile.
-
-    Returns:
-        Response: The rendered 'profiles/profile.html' template with the profile.
+    Vue affichant les détails d'un profil utilisateur.
     """
-    profile = Profile.objects.get(user__username=username)
-    context = {'profile': profile}
-    return render(request, 'profiles/profile.html', context)
+    try:
+        profile = get_object_or_404(Profile, user__username=username)
+        context = {'profile': profile}
+        logger.info(f"Profil chargé : {profile.user.username}")
+        return render(request, 'profiles/profile.html', context)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        logger.error(f"Erreur lors de l'affichage du profil {username}: {e}")
+        return render(request, "500.html", status=500)
