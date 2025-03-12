@@ -1,15 +1,16 @@
 import os
-import sys
-from pathlib import Path
 import django
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "oc_lettings_site.settings")
-django.setup()
+
+on_rtd = os.environ.get("READTHEDOCS") == "True"
+
+if not on_rtd:
+    django.setup()
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
