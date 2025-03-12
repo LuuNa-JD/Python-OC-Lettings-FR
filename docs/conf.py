@@ -28,6 +28,8 @@ extensions = [
     'sphinx.ext.viewcode',
     ]
 
+django_settings = "oc_lettings_site.settings"
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
