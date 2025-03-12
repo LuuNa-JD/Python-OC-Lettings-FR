@@ -1,77 +1,115 @@
-## Résumé
+# 🏡 Python-OC-Lettings-FR
 
-Site web d'Orange County Lettings
+**Site web de gestion de locations pour Orange County Lettings, optimisé avec CI/CD et déploiement automatisé.**
+
+📖 **Documentation complète :** [Disponible sur Read The Docs](https://python-oc-lettings-jd.readthedocs.io/fr/latest/)
+
+---
 
 ## Développement local
 
 ### Prérequis
 
-- Compte GitHub avec accès en lecture à ce repository
-- Git CLI
-- SQLite3 CLI
-- Interpréteur Python, version 3.6 ou supérieure
+- **GitHub** (accès en lecture au repository)
+- **Git CLI**
+- **Interpréteur Python 3.10+**
+- **Docker & Docker Compose** (optionnel pour tester en conteneur)
 
-Dans le reste de la documentation sur le développement local, il est supposé que la commande `python` de votre OS shell exécute l'interpréteur Python ci-dessus (à moins qu'un environnement virtuel ne soit activé).
+---
 
-### macOS / Linux
+### Installation et exécution (sans Docker)
 
-#### Cloner le repository
+#### 1️⃣ **Cloner le repository**
+```bash
+git clone https://github.com/LuuNa-JD/Python-OC-Lettings-FR.git
+cd Python-OC-Lettings-FR
+```
 
-- `cd /path/to/put/project/in`
-- `git clone https://github.com/OpenClassrooms-Student-Center/Python-OC-Lettings-FR.git`
+#### 2️⃣ **Créer l'environnement virtuel**
+```bash
+python -m venv venv
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate  # Windows
+```
 
-#### Créer l'environnement virtuel
+#### 3️⃣ **Installer les dépendances**
+```bash
+pip install -r requirements.txt
+```
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- `python -m venv venv`
-- `apt-get install python3-venv` (Si l'étape précédente comporte des erreurs avec un paquet non trouvé sur Ubuntu)
-- Activer l'environnement `source venv/bin/activate`
-- Confirmer que la commande `python` exécute l'interpréteur Python dans l'environnement virtuel
-`which python`
-- Confirmer que la version de l'interpréteur Python est la version 3.6 ou supérieure `python --version`
-- Confirmer que la commande `pip` exécute l'exécutable pip dans l'environnement virtuel, `which pip`
-- Pour désactiver l'environnement, `deactivate`
+#### 4️⃣ **Lancer l'application**
+```bash
+python manage.py runserver
+```
+**Accès à l'application :** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-#### Exécuter le site
+---
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- `source venv/bin/activate`
-- `pip install --requirement requirements.txt`
-- `python manage.py runserver`
-- Aller sur `http://localhost:8000` dans un navigateur.
-- Confirmer que le site fonctionne et qu'il est possible de naviguer (vous devriez voir plusieurs profils et locations).
+## Déploiement en Production (Docker + Traefik + Authelia)
 
-#### Linting
+L'application est déployée avec **Docker Compose** en utilisant **Traefik** pour le reverse proxy et **Authelia** pour l'authentification.
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- `source venv/bin/activate`
-- `flake8`
+### **Prérequis**
+- Une **machine virtuelle (VM) sous Linux (ex : OVH, AWS, etc.)**
+- **Docker & Docker Compose installés**
+- Un **nom de domaine** configuré pour pointer sur la VM
 
-#### Tests unitaires
+### **Lancer l'application en production**
+```bash
+docker compose up -d --build
+```
+**Accès à l'application :** `https://votre-domaine.com`
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- `source venv/bin/activate`
-- `pytest`
+**Authentification via Authelia** : L'authentification est requise pour accéder à certaines sections de l'application comme l'administration Django.
 
-#### Base de données
+---
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- Ouvrir une session shell `sqlite3`
-- Se connecter à la base de données `.open oc-lettings-site.sqlite3`
-- Afficher les tables dans la base de données `.tables`
-- Afficher les colonnes dans le tableau des profils, `pragma table_info(Python-OC-Lettings-FR_profile);`
-- Lancer une requête sur la table des profils, `select user_id, favorite_city from
-  Python-OC-Lettings-FR_profile where favorite_city like 'B%';`
-- `.quit` pour quitter
+## **CI/CD avec Jenkins**
+Un pipeline **Jenkins** est utilisé pour l'intégration et le déploiement continus.
 
-#### Panel d'administration
+🔹 **Étapes du pipeline :**
+1. **Linting** avec `flake8`
+2. **Tests unitaires** avec `pytest`
+3. **Build Docker**
+4. **Déploiement sur le serveur**
 
-- Aller sur `http://localhost:8000/admin`
-- Connectez-vous avec l'utilisateur `admin`, mot de passe `Abc1234!`
+---
 
-### Windows
+## **Monitoring & Logs**
+L'application est intégrée avec **Sentry** pour le suivi des erreurs.
 
-Utilisation de PowerShell, comme ci-dessus sauf :
+**Accéder au Dashboard Sentry :** `https://sentry.io/organizations/organisation-name/projects/project-name/`
 
-- Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
-- Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+---
+
+## **Commandes utiles**
+
+### **Linting**
+```bash
+flake8
+```
+
+### **Tests unitaires**
+```bash
+pytest
+```
+
+### **Gestion de la base de données**
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+**Accès à l'administration Django :** [https://votre-domaine.com/admin](https://votre-domaine.com/admin)
+
+login : `admin`
+password : `Abc1234!`
+
+---
+
+## **Licence**
+Projet sous licence MIT.
+
+---
+
+**Besoin d'aide ?** Contactez-moi sur GitHub !
