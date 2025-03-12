@@ -4,3 +4,6 @@ venv
 .env
 htmlcov
 prod.env
+_build/
+_static/
+_templates/
