@@ -7,3 +7,6 @@ prod.env
 docs/_build/*
 docs/_static/*
 docs/_templates/*
+!docs/_static/.keep
+!docs/_templates/.keep
+!docs/_build/.keep
