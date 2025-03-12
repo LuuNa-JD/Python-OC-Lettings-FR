@@ -1,3 +1,13 @@
+django==5.1.6
+flake8==7.1.2
+pytest-django==4.10.0
+coverage==7.6.12
+pytest-cov==6.0.0
+pytest==8.3.4
+python-dotenv==1.0.1
+gunicorn==23.0.0
+whitenoise==6.9.0
+sentry-sdk[django]==2.22.0
 Sphinx==8.1.3
 sphinx-rtd-theme==3.0.2
 sphinx-autobuild>=2024.10.3
